@@ -1,3 +1,4 @@
+import { User, Twitter } from "../class/tweteroo.class.js";
 const usuarios = [];
 const tweets = [];
 
@@ -5,22 +6,23 @@ function reverseTweets() {
     return [...tweets].reverse();
 }
 
-function singUp(req, res){
-    
+function singUp(req, res) {
+
     const { username, avatar } = req.body;
+
 
     if (!username || !avatar) {
         res.status(400).send('Todos os campos são obrigatórios!');
         return;
     }
 
-    usuarios.push({ username, avatar });
+    usuarios.push(new User(username, avatar));
 
     res.status(200).send('OK deu tudo certo');
 }
 
-function createTwitter(req, res){
-    
+function createTwitter(req, res) {
+
     const { tweet, username } = req.body;
 
     if (!username || !tweet) {
@@ -29,13 +31,13 @@ function createTwitter(req, res){
 
     const { avatar } = usuarios.find(user => user.username === username);
 
-    tweets.push({ username, tweet, avatar });
+    tweets.push(new Twitter(username, tweet, avatar));
 
     res.status(201).send('OK, seu tweet foi criado');
 }
 
-function getTwitterByName(req, res){
-    
+function getTwitterByName(req, res) {
+
     const { username } = req.params;
 
     const tweetsDoUsuario = tweets.filter(t => t.username === username);
@@ -43,7 +45,7 @@ function getTwitterByName(req, res){
     res.status(200).send(tweetsDoUsuario);
 }
 
-function listTwitter(req, res){
+function listTwitter(req, res) {
     const { page } = req.query;
 
     if (page && page < 1) {
@@ -61,7 +63,7 @@ function listTwitter(req, res){
     res.status(200).send([...tweets].reverse().slice(start, end));
 }
 
-export{
+export {
     singUp,
     createTwitter,
     getTwitterByName,
